@@ -9,7 +9,7 @@ using namespace std;
 
 ReadData_CAEN::ReadData_CAEN(path_info PathInfo, const std::vector<ch_info> ch_list, struct comm_info str_comm)
 {
-	ofstream f_out("D://data//test.txt");
+	//ofstream f_out("D://data//test.txt");
 	//vectors initialisation
 	//-------------------------------------
 	//data.resize(PathInfo.events_per_file);
@@ -39,7 +39,11 @@ ReadData_CAEN::ReadData_CAEN(path_info PathInfo, const std::vector<ch_info> ch_l
 		//data[i].resize(vsize);
 		//data_double[i].resize(vsize);
 
-		vector<short int> data_tmp;
+		stringstream f_out_oss;
+		f_out_oss << PathInfo.path_name_txt << "run_" << PathInfo.run_number << "__ch_" << ch_list[ch].id << ".txt";
+		ofstream f_out(f_out_oss.str().c_str());
+
+		vector<uint16_t> data_tmp;
 		data_tmp.resize(run_size);
 
 		stringstream file_full_path;
@@ -61,7 +65,7 @@ ReadData_CAEN::ReadData_CAEN(path_info PathInfo, const std::vector<ch_info> ch_l
 			exit(1);
 		}
 
-		fread(&data_tmp[0], sizeof(vector<short int>::value_type), run_size, f);
+		fread(&data_tmp[0], sizeof(vector<uint16_t>::value_type), run_size, f);
 		fclose(f);
 
 		//y points to volts
@@ -69,13 +73,19 @@ ReadData_CAEN::ReadData_CAEN(path_info PathInfo, const std::vector<ch_info> ch_l
 		{
 			for (int j = 0; j < str_comm.WAVE_ARRAY_COUNT; j++)
 			{
+				const int abs_point = j + temp_event_id*str_comm.WAVE_ARRAY_COUNT;
 				//data_double[i][j] = (ch_list[i].VERTICAL_GAIN * data[i][j] - ch_list[i].VERTICAL_OFFSET) * 1000/*V -> mV */;
-				data_double[temp_event_id][ch][j] = ((2 / 4095.0) * data_tmp[(j + temp_event_id*PathInfo.events_per_file)] - 1) * 1000;
+				data_double[temp_event_id][ch][j] = ((2 / 4095.0) * data_tmp[abs_point] - 1) * 1000;
 				//cout << i << " " << j << " " << data[i][j] << " " <<  data_double[i][j] << endl;
+				
 				if (ch == 7)
 				{
-					f_out << j << "\t" << temp_event_id << "\t" << data_tmp[(j + temp_event_id*PathInfo.events_per_file)] << "\t" << data_double[temp_event_id][ch][j] << endl;
+					//f_out << j << "\t" << temp_event_id << "\t" << data_tmp[(j + temp_event_id*PathInfo.events_per_file)] << "\t" << data_double[temp_event_id][ch][j] << endl;
+					f_out << data_tmp[abs_point] << endl;
 				}
+
+				//f_out << data_double[temp_event_id][ch][j] << endl;
+				//f_out << data_tmp[(j + temp_event_id*PathInfo.events_per_file)] << endl;
 			}
 		}		
 

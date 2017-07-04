@@ -8,8 +8,9 @@
 struct path_info
 {
 	std::string path_name;
+	std::string path_name_txt;
 	int run_number;
-	int events_per_file;
+	int events_per_file;	
 };
 
 

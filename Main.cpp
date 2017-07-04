@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
 	//For CAEN
 	path_info PathInfo;
 	//PathInfo.path_name = "D:\\Data_work\\170622_caen_raw\\event_x-ray_18_small_2\\";
-	PathInfo.path_name = "D:\\data\\170630_test\\test_7\\";
+	PathInfo.path_name = "D:\\data\\test\\test__events_per_file\\";
+	PathInfo.path_name_txt = "D:\\data\\test\\test__events_per_file_txt\\";
 	PathInfo.events_per_file = 10;
 
 	vector<ch_info> ch_list;
@@ -39,12 +40,12 @@ int main(int argc, char *argv[])
 
 	comm_info str_comm;
 	str_comm.HORIZ_INTERVAL = 16;//ns per point;
-	str_comm.WAVE_ARRAY_COUNT = 9999;//number of points in one event
+	str_comm.WAVE_ARRAY_COUNT = 51;//number of points in one event
 	//-------------------------------------------------
 
 	//which raw files should be processed? 
-	const int start_run_number = 189;
-	const int stop_run_number = 189;
+	const int start_run_number = 1;
+	const int stop_run_number = 1;
 	const int n_runs = stop_run_number;
 	cout << "n_runs = " << stop_run_number - start_run_number + 1 << endl;
 
